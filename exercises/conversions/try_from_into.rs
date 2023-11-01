@@ -27,8 +27,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
 // integers, an array of three integers, and a slice of integers.
@@ -41,6 +39,12 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let (red, green, blue) = tuple;
+        let values = 1..=255;
+        if values.contains(&red) && values.contains(&green) && values.contains(&blue) {
+            return Ok(Color { red: red as u8, green: green as u8, blue: blue as u8 })
+        }
+        Err(Self::Error::IntConversion)
     }
 }
 
@@ -48,6 +52,12 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let [red, green, blue] = arr;
+        let values = 1..=255;
+        if values.contains(&red) && values.contains(&green) && values.contains(&blue) {
+            return Ok(Color { red: red as u8, green: green as u8, blue: blue as u8 })
+        }
+        Err(Self::Error::IntConversion)
     }
 }
 
@@ -55,6 +65,17 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(Self::Error::BadLen)
+        }
+        let red = slice[0];
+        let green = slice[1];
+        let blue = slice[2];
+        let values = 1..=255;
+        if values.contains(&red) && values.contains(&green) && values.contains(&blue) {
+            return Ok(Color { red: red as u8, green: green as u8, blue: blue as u8 })
+        }
+        Err(Self::Error::IntConversion)
     }
 }
 
